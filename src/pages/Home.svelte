@@ -13,12 +13,16 @@
 
     let flames = [];
 
+    let loading = true;
+
     onMount(() => {
       console.log("subscribe main");
 
       const q = query(collection(firestore, "flames"), orderBy("createdAt", "desc"), limit(20));
 
       const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        loading = false;
+        
         const flamesDelta = [];
         querySnapshot.forEach((doc) => {
           flamesDelta.push({ id: doc.id, ...doc.data() });
@@ -31,6 +35,7 @@
 
       return () => {
         unsubscribe();
+        console.log("unsub")
       }
     });
 
@@ -44,14 +49,28 @@
 </div>
 
 <Route path="/">
-  <div class="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[1200px] mx-auto my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-4 sm:px-8">
-    {#if $user}
-      <Flame />
-    {/if}
-    {#each flames as flame (flame.id)}
-      <Flame data={flame} />
-    {/each}
-  </div>
+  {#if !loading}
+    <div class="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[1200px] mx-auto my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-4 sm:px-8">
+      {#if $user}
+        <Flame />
+      {/if}
+      {#each flames as flame (flame.id)}
+        <Flame data={flame} />
+      {/each}
+    </div>
+  {:else}
+    <div class="flex items-center justify-center h-[90vh] text-primary flex-col gap-5">
+      <div
+        class="inline-block h-16 w-16 animate-spin border-current rounded-full border-4 border-solid border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+        role="status">
+        <span
+          class="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]"
+          >Loading...</span
+        >
+      </div>
+      <div class="text-xl">loading flames...</div>
+    </div>
+  {/if}
 </Route>
 
 <Route path="/tag/:tag" component={TagHome} />

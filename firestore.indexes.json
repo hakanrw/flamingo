@@ -1,4 +1,17 @@
 {
-  "indexes": [],
-  "fieldOverrides": []
+  "indexes": [
+    {
+      "collectionId": "teslaData",
+      "fields": [
+        {
+          "fieldPath": "Model",
+          "mode": "ASCENDING"
+        },
+        {
+          "fieldPath": "Price",
+          "mode": "ASCENDING"
+        }
+      ]
+    }
+  ]
 }

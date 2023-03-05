@@ -30,7 +30,7 @@ const app = initializeApp(firebaseConfig);
 
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
-export const functions = getFunctions(app);
+export const functions = getFunctions(app, "europe-west1");
 export const firestore = getFirestore(app);
 export const storage = getStorage(app);
 
