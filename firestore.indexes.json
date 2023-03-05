@@ -1,17 +1,19 @@
 {
   "indexes": [
     {
-      "collectionId": "teslaData",
+      "collectionGroup": "flames",
+      "queryScope": "COLLECTION",
       "fields": [
         {
-          "fieldPath": "Model",
-          "mode": "ASCENDING"
+          "fieldPath": "tags",
+          "arrayConfig": "CONTAINS"
         },
         {
-          "fieldPath": "Price",
-          "mode": "ASCENDING"
+          "fieldPath": "createdAt",
+          "order": "DESCENDING"
         }
       ]
     }
-  ]
+  ],
+  "fieldOverrides": []
 }
