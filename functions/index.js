@@ -33,6 +33,6 @@ const addFlame = (data, context) => {
 
 
 module.exports = {
-  authOnCreate: functions.auth.user().onCreate(createProfile),
-  addFlame: functions.https.onCall(addFlame),
+  authOnCreate: functions.region("europe-west1").auth.user().onCreate(createProfile),
+  addFlame: functions.region("europe-west1").https.onCall(addFlame),
 }
