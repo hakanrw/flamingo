@@ -36,6 +36,7 @@
         if (status[0] === "success") {
           message = null;
           tags = [];
+          navigate("/");
         }
         
       })
