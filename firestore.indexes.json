@@ -5,6 +5,20 @@
       "queryScope": "COLLECTION",
       "fields": [
         {
+          "fieldPath": "author",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "createdAt",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "flames",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
           "fieldPath": "tags",
           "arrayConfig": "CONTAINS"
         },
