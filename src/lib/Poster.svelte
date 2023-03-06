@@ -23,17 +23,20 @@
   }
 
   function sendFlame() {
+    if (status && status[1] === "sending flame...") return;
+
     status = ["info", "sending flame..."];
     const addFlame = httpsCallable(functions, "addFlame");
     addFlame({ message, tags})
       .then((data) => {
         console.log(data);
-        status = ["success", "successfully sent!"];
+        status = [data.data.status, data.data.message];
 
-        message = null;
-        tags = [];
-
-        navigate("/");
+        console.log(status);
+        if (status[0] === "success") {
+          message = null;
+          tags = [];
+        }
         
       })
       .catch(error => {

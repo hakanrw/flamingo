@@ -15,7 +15,15 @@ const createProfile = (userRecord, context) => {
     .catch(console.error);
 };
 
-const addFlame = (data, context) => {
+const addFlame = async (data, context) => {
+  if (!context.auth) return { message: "you need to authorize", status: "error" };
+  
+  let authorName = context.auth.token.name || null;
+  let authorPicture = context.auth.token.picture || null;
+  const author = context.auth.uid;
+
+  const isAdmin = context.auth.token.email === "imparatorahmett@gmail.com";
+
   let tags = data.tags || [];
   if (!Array.isArray(tags)) tags = [];
   tags = tags.slice(0, 8);
@@ -25,10 +33,49 @@ const addFlame = (data, context) => {
   message = message.substring(0, 400);
 
   const db = admin.firestore();
-  return db
+
+  // SPAM PROTECTION BEGIN
+  const spamProtection = await Promise.all([
+    db.collection("flames").where("author", "==", author).orderBy("createdAt", "desc").limit(1).get(),
+    db.collection("flames").where("author", "==", author).where("createdAt", ">=", Date.now() - 60 * 60 * 1000).count().get(),
+    db.collection("server").doc("status").get(),
+  ]);
+
+  if (spamProtection[2].data && spamProtection[2].data().code === "down" && !isAdmin) {
+    return { message: "server is temporarily closed", status: "error" };
+  }
+  
+  if (spamProtection[1].data().count >= 10) {
+    return { message: "you can send 10 flames in an hour maximum.", status: "error" };
+  }
+
+  if (!isAdmin && tags.includes("admin")) {
+    tags = tags.filter(tag => tag != "admin");
+  }
+
+  const lastMsg = await spamProtection[0];
+  let recentMessage = false;
+
+  lastMsg.forEach(doc => {
+    if (Date.now() - doc.get("createdAt") < 8000) recentMessage = true;
+  });
+  if (recentMessage) return { message: "you are too fast", status: "error" };
+  
+  // SPAM PROTECTION END
+
+
+  if (isAdmin && tags.includes("admin")) {
+    authorName = "ADMIN";
+    authorPicture = "https://flamingo.candar.dev/avatar.jpg";
+  }
+
+
+  await db
     .collection("flames")
     .doc()
-    .set({ message: message, tags: tags || [], author: context.auth.uid, authorName: context.auth.token.name || null, authorPicture: context.auth.token.picture || null, createdAt: Date.now()})
+    .set({ message, tags, author, authorName, authorPicture, createdAt: Date.now()});
+
+  return { message: "successfully sent flame", status: "success" };
 }
 
 

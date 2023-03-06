@@ -7,12 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "emulators": "env-cmd firebase emulators:start"
+    "emulators": "env-cmd firebase emulators:start",
+    "emulators-stop": "npx kill-port 4000 8080 9090 9199 5000 5001"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.0.2",
     "autoprefixer": "^10.4.7",
     "env-cmd": "^10.1.0",
+    "firebase-admin": "^11.5.0",
     "postcss": "^8.4.14",
     "postcss-load-config": "^4.0.1",
     "svelte": "^3.55.1",

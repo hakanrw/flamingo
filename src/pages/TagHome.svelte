@@ -7,14 +7,17 @@
   import { onMount } from "svelte";
   import { firestore } from "../lib/firebase";
   import { collection, limit, onSnapshot, orderBy, query, where } from "firebase/firestore";
+    import Loading from "../lib/Loading.svelte";
 
-
+  
   let flames = [];
-
+  
   let params = useParams();
-
+  
   let currentListenerUnsubscribe = () => {};
   let lastTag = null;
+  
+  let loading = true;
 
   function listenFlames(tag) {
     if (lastTag === tag) return;
@@ -26,6 +29,8 @@
     const q = query(collection(firestore, "flames"), where("tags", "array-contains", tag), orderBy("createdAt", "desc"), limit(20));
 
     currentListenerUnsubscribe = onSnapshot(q, (querySnapshot) => {
+      loading = false;
+
       const flamesDelta = [];
       querySnapshot.forEach((doc) => {
         flamesDelta.push({ id: doc.id, ...doc.data() });
@@ -50,8 +55,12 @@
   console.log($user)
 </script>
 
-<div class="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[1200px] mx-auto my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-4 sm:px-8">
-  {#each flames as flame (flame.id)}
-    <Flame data={flame} />
-  {/each}
-</div>
+{#if !loading}
+  <div class="w-full max-w-[500px] md:max-w-[800px] lg:max-w-[1200px] mx-auto my-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 px-4 sm:px-8">
+    {#each flames as flame (flame.id)}
+      <Flame data={flame} />
+    {/each}
+  </div>
+{:else}
+  <Loading />
+{/if}
