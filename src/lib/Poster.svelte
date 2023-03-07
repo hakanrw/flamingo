@@ -13,8 +13,10 @@
   let navigate = useNavigate();
 
   function tagsChange(e) {
-    removeTag(e.target.value);
-    tags = [ ...tags, e.target.value];
+    let tagVal = e.target.value.trim().substring(0, 20);
+
+    removeTag(tagVal);
+    tags = [ ...tags, tagVal];
     e.target.value = "";
   }
 
@@ -44,6 +46,10 @@
         status = ["error", error]
       })
   }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const requestedTag = urlParams.get('tag');
+  if (requestedTag) tagsChange({target: {value: requestedTag}});
 </script>
 
 <div class="paper my-5 mx-10 md:mx-auto md:w-[600px] p-5">

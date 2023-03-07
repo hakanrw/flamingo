@@ -27,6 +27,7 @@ const addFlame = async (data, context) => {
   let tags = data.tags || [];
   if (!Array.isArray(tags)) tags = [];
   tags = tags.slice(0, 8);
+  tags = tags.map(tag => tag.trim().substring(0, 20));
 
   let message = data.message || "";
   if (typeof(message) !== "string") message = "empty flame";
@@ -41,7 +42,7 @@ const addFlame = async (data, context) => {
     db.collection("server").doc("status").get(),
   ]);
 
-  if (spamProtection[2].data && spamProtection[2].data().code === "down" && !isAdmin) {
+  if (spamProtection[2].data() && spamProtection[2].data().code === "down" && !isAdmin) {
     return { message: "server is temporarily closed", status: "error" };
   }
   

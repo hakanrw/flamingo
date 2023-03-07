@@ -7,6 +7,7 @@
   import { deleteDoc, doc } from "firebase/firestore";
 
   export let data = null;
+  export let forTag = null;
 
   function deleteFlame() {
 
@@ -21,7 +22,7 @@
   }
 </script>
 
-<div class="paper min-h-[200px] p-4">
+<div class={"paper p-4 " + (data ? "min-h-[200px]" : "md:min-h-[200px]")}>
   {#if data}
     <div>
       <div class="flex gap-2 items-center gap-4">
@@ -49,7 +50,7 @@
       </div>
       <div class="flex gap-2 mt-4 mb-1 flex-wrap">
         {#each data.tags || [] as tag (tag)}
-          <Link to={`/tag/${tag}`} class="badge badge-lg" style="background-color: {stc(tag)}; border-color: {stc(tag)}">{tag}</Link>
+          <Link to={`/tag/${encodeURIComponent(tag)}`} class="badge badge-lg" style="background-color: {stc(tag)}; border-color: {stc(tag)}">{tag}</Link>
         {/each}
       </div>
       <div class="break-words">
@@ -57,11 +58,16 @@
       </div>
     </div>
   {:else}
-    <Link to="/write" class="flex h-full flex-col justify-center items-center text-primary">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-20 h-20">
+    <Link to={"/write" + (forTag ? "?tag=" + encodeURIComponent(forTag) : "")} class="flex h-full flex-col justify-center items-center text-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-14 h-14 md:w-20 md:h-20">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
       </svg>
-      <div class="my-2">write flame</div>
+      <div class="my-2">
+        write flame 
+        {#if forTag} 
+          for <div class="badge p-3 ml-1 badge-primary" style="background-color: {stc(forTag)}; border-color: {stc(forTag)}">{forTag}</div>
+        {/if}
+      </div>
     </Link>
   {/if}
 </div>

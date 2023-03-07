@@ -45,7 +45,7 @@
 
 <div class="bg-secondary whitespace-nowrap overflow-auto">
   {#each tags as tag (tag)}
-    <Link to={`/tag/${tag}`} class="badge p-3 m-2 mr-1 ml-1 badge-primary badge-lg" style="background-color: {stc(tag)}; border-color: {stc(tag)}">{tag}</Link>
+    <Link to={`/tag/${encodeURIComponent(tag)}`} class="badge p-3 m-2 mr-1 ml-1 badge-primary badge-lg" style="background-color: {stc(tag)}; border-color: {stc(tag)}">{tag}</Link>
   {/each}
 </div>
 
