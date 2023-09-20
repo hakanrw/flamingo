@@ -63,9 +63,11 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
       </svg>
       <div class="my-2">
-        write flame 
+        <div class="inline">write flame</div> 
         {#if forTag} 
-          for <div class="badge p-3 ml-1 badge-primary" style="background-color: {stc(forTag)}; border-color: {stc(forTag)}">{forTag}</div>
+          <div class="inline">
+            for <div class="badge p-3 ml-1 badge-primary" style="background-color: {stc(forTag)}; border-color: {stc(forTag)}">{forTag}</div>
+          </div>
         {/if}
       </div>
     </Link>
